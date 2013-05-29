@@ -4,6 +4,7 @@ use Test;
 BEGIN { @*INC.unshift('lib') }
 
 use GD::Raw;
+plan 7;
 
 # Create image
 {
@@ -32,5 +33,7 @@ my $tmp-path = IO::Path.new(IO::Spec.tmpdir).child("gd-raw-tmpimg");
         is gdImageSY($img), 64, "Image is 64 pixels in y";
         gdImageDestroy($img);
 }
+
+done;
 
 try { unlink $tmp-path.Str }
