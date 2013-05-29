@@ -1,6 +1,6 @@
 {
     "name"        : "GD::Raw",
-    "version"     : "*",
+    "version"     : "0.01",
     "description" : "Low level language bindings to GD Graphics Library",
     "author"      : "Dagur Valberg Johannsson",
     "depends"     : "NativeCall",
