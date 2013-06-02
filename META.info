@@ -4,5 +4,5 @@
     "description" : "Low level language bindings to GD Graphics Library",
     "author"      : "Dagur Valberg Johannsson",
     "depends"     : "NativeCall",
-    "source-uri"  : "git://github.com/dagurval/perl6-gd-raw.git"
+    "source-url"  : "git://github.com/dagurval/perl6-gd-raw.git"
 }
