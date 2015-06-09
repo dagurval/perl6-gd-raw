@@ -23,7 +23,6 @@ class gdImageStruct is repr('CStruct') is export {
 }
 
 sub gdImageSX($img) is export {
-    say "Using correct GD::Raw";
     return $img.sx;
 }
 
