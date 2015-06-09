@@ -22,12 +22,13 @@ class gdImageStruct is repr('CStruct') is export {
     has int32 $.sy = -1;
 }
 
-macro gdImageSX($img) is export {
-    quasi { {{{$img}}}.sx };
+sub gdImageSX($img) is export {
+    say "Using correct GD::Raw";
+    return $img.sx;
 }
 
-macro gdImageSY($img) is export {
-    quasi { {{{$img}}}.sy };
+sub gdImageSY($img) is export {
+    return $img.sy;
 }
 
 sub fopen( Str $filename, Str $mode )
