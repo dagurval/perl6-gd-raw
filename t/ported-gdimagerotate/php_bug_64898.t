@@ -4,6 +4,8 @@ use GD::Raw;
 use gdtest;
 use Test;
 
+plan 1;
+
 my $path = "t/ported-gdimagerotate/php_bug_64898.png";
 my $file-exp = "t/ported-gdimagerotate/php_bug_64898_exp.png";
 
