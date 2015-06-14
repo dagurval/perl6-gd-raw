@@ -168,6 +168,10 @@ sub gdImageOpenPolygon(gdImagePtr $im, @p, int32 $n, int32 $c) is export
     }
 }
 
+sub gdImageRotateInterpolated(gdImagePtr $src, num32 $angle, int32 $bgcolor)
+    returns gdImagePtr
+    is native(LIB) is export { * }
+
 
 =begin pod
 
