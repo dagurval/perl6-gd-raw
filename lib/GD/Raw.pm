@@ -39,8 +39,9 @@ constant gdEffectNormal is export = 2;
 constant gdEffectOverlay is export = 3;
 
 class gdImageStruct is repr('CStruct') is export {
-    has int32 $.hack1; # Hack! don't know how to represent unsigned char **
-    has int32 $.hack2; # Hack! so we pretend we have two ints to get to sx, sy
+    #has int32 $.hack1; # Hack! don't know how to represent unsigned char **
+    #has int32 $.hack2; # Hack! so we pretend we have two ints to get to sx, sy
+    has OpaquePointer $.pixels;
     has int32 $.sx = -1;
     has int32 $.sy = -1;
 }
@@ -97,6 +98,11 @@ sub gdImageGif(gdImageStruct $im, OpaquePointer $f)
 sub gdImageBmp(gdImageStruct $im, OpaquePointer $f, int32)
     is native(LIB) is export { ... }
 
+sub gdImageFilledEllipse (gdImagePtr $im, int32 $cx, int32 $cy, int32 $w, int32 $h,
+                                        int32 $color)
+    # returns void
+    is native(LIB) is export { * }
+
 sub gdImageCopyResized(gdImageStruct $dst, gdImageStruct $src, 
         int32 $dstX, int32 $dstY,
         int32 $srcX, int32 $srcY, 
@@ -106,6 +112,11 @@ sub gdImageCopyResized(gdImageStruct $dst, gdImageStruct $src,
 sub gdImageCopyResampled(gdImageStruct $dst, gdImageStruct $src,
     Int $dstX, Int $dstY, Int $srcX, Int $srcY, Int $dstW, Int $dstH, Int $srcW, Int $srcH)
     is native(LIB) is export { ... }
+
+
+sub gdImageSetThickness(gdImagePtr $im, int32 $thickness) 
+    #returns void
+    is native(LIB) is export { * }  
 
 sub gdImageDestroy(gdImageStruct)
     is native(LIB) is export { ... }
