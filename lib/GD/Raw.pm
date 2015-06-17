@@ -129,6 +129,20 @@ sub gdImageSY($img) is export {
     return $img.sy;
 }
 
+sub gdImageColorsTotal($im) { $im.colorsTotal }
+sub gdImageRed($im, Int $c) is export {
+    $im.trueColor ?? gdTrueColorGetRed($c) !! EVAL "\$im.red$c"
+}
+sub gdImageGreen($im, Int $c) is export {
+    $im.trueColor ?? gdTrueColorGetGreen($c) !! EVAL "\$im.green$c"
+}
+sub gdImageBlue($im, Int $c) is export {
+    $im.trueColor ?? gdTrueColorGetBlue($c) !! EVAL "\$im.blue$c"
+}
+sub gdImageAlpha($im, Int $c) is export {
+    $im.trueColor ?? gdTrueColorGetAlpha($c) !! EVAL "\$im.alpha$c"
+}
+
 sub fopen( Str $filename, Str $mode )
     returns OpaquePointer
     is native(LIB) is export { ... }
@@ -203,6 +217,10 @@ sub gdImageGetTrueColorPixel(gdImagePtr $im, int32 $x, int32 $y)
 
 sub gdImageSetPixel(gdImagePtr $im, int32 $x, int32 $y, int32 $color)
     # returns void
+    is native(LIB) is export { * }
+
+sub gdImageGetPixel(gdImagePtr $im, int32 $x, int32 $y)
+    returns int32
     is native(LIB) is export { * }
 
 
@@ -292,6 +310,10 @@ sub gdExtraVersion(void)
 
 sub gdVersionString()
     returns int
+    is native(LIB) is export { * }
+
+sub gdImageCopyGaussianBlurred(gdImagePtr $src, int32 $radius, num64 $sigma)
+    returns gdImagePtr
     is native(LIB) is export { * }
 
 =begin pod
