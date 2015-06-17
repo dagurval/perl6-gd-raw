@@ -33,6 +33,33 @@ sub gdTrueColorGetGreen($c) is export {
 sub gdTrueColorGetBlue($c) is export {
     (($c) +& 0x0000FF)
 }
+
+enum gdInterpolationMethod (
+	GD_DEFAULT          => 0,
+	GD_BELL => 1,
+	GD_BESSEL => 2,
+	GD_BILINEAR_FIXED => 3,
+	GD_BICUBIC => 4,
+	GD_BICUBIC_FIXED => 5,
+	GD_BLACKMAN => 6,
+	GD_BOX => 7,
+	GD_BSPLINE => 8,
+	GD_CATMULLROM => 9,
+	GD_GAUSSIAN => 10,
+	GD_GENERALIZED_CUBIC => 11,
+	GD_HERMITE => 12,
+	GD_HAMMING => 13,
+	GD_HANNING => 14,
+	GD_MITCHELL => 15,
+	GD_NEAREST_NEIGHBOUR => 16,
+	GD_POWER => 17,
+	GD_QUADRATIC => 18,
+	GD_SINC => 19,
+	GD_TRIANGLE => 20,
+    GD_WEIGHTED4 => 21,
+	GD_METHOD_COUNT => 21
+);
+
 constant gdEffectReplace is export = 0;
 constant gdEffectAlphaBlend is export = 1;
 constant gdEffectNormal is export = 2;
