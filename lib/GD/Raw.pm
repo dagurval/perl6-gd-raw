@@ -160,7 +160,9 @@ sub gdImageCreate(int32, int32)
     returns gdImagePtr
     is native(LIB) is export { ... }
 
-sub gdImageJpeg(gdImageStruct $image, OpaquePointer $file, Int $quality where { $_ <= 95 }) 
+sub gdImageCreatePalette($x, $y) is export { gdImageCreate($x, $y) }
+
+sub gdImageJpeg(gdImageStruct $image, OpaquePointer $file, Int $quality where { $_ <= 95 })
     is native(LIB) is export { ... }
 
 sub gdImagePng(gdImageStruct $image, OpaquePointer $file)
@@ -253,10 +255,44 @@ sub gdImageOpenPolygon(gdImagePtr $im, @p, int32 $n, int32 $c) is export
     }
 }
 
+
+sub gdImageColorExactAlpha(gdImagePtr $im, int32 $r, int32 $g, int32 $b, int32 $a)
+    returns int32
+    is native(LIB) is export { * }
+
+sub gdImageSetInterpolationMethod(gdImagePtr $im, int32 $id) #gdInterpolationMethod $id)
+    returns int32
+    is native(LIB) is export { * }
+
+# Segfaults with GD 2.1 (for me). Works with 2.2
+sub gdImageScale(gdImagePtr $src, uint32 $new_width, uint32 $new_height)
+    returns gdImagePtr
+    is native(LIB) is export { * }
+
 sub gdImageRotateInterpolated(gdImagePtr $src, num32 $angle, int32 $bgcolor)
     returns gdImagePtr
     is native(LIB) is export { * }
 
+
+# Need GD 2.2 for these.
+sub gdMajorVersion()
+    returns int
+    is native(LIB) is export { * }
+
+sub gdMinorVersion()
+    returns int
+    is native(LIB) is export { * }
+
+sub gdReleaseVersion()
+    returns int
+    is native(LIB) is export { * }
+sub gdExtraVersion(void)
+    returns Str
+    is native(LIB) is export { * }
+
+sub gdVersionString()
+    returns int
+    is native(LIB) is export { * }
 
 =begin pod
 
