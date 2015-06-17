@@ -35,6 +35,32 @@ sub gdTestImageCompareToFile(Cool $file, Int $line,
     return gdTestImageCompareToImage($file, $line, $message, $expected, $actual);
 }
 
+# Return the largest difference between two corresponding pixels and
+# channels.
+sub gdMaxPixelDiff(gdImagePtr $a, gdImagePtr $b) is export
+{
+    my $diff = 0;
+    my ($x, $y);
+
+    die unless $a and $b;
+    die unless $a.sx == $b.sx;
+    die unless $a.sy == $b.sy;
+
+    loop ($x = 0; $x < $a.sx; $x++) {
+        loop ($y = 0; $y < $a.sy; $y++) {
+			my $c1 = gdImageGetTrueColorPixel($a, $x, $y);
+			my $c2 = gdImageGetTrueColorPixel($b, $x, $y);
+            next if $c1 == $c2;
+
+            $diff = max($diff, abs(gdTrueColorGetAlpha($c1) - gdTrueColorGetAlpha($c2)));
+            $diff = max($diff, abs(gdTrueColorGetRed($c1)   - gdTrueColorGetRed($c2)));
+            $diff = max($diff, abs(gdTrueColorGetGreen($c1) - gdTrueColorGetGreen($c2)));
+            $diff = max($diff, abs(gdTrueColorGetBlue($c1)  - gdTrueColorGetBlue($c2)));
+        }
+    }
+
+    return $diff;
+}
 
 # Compare two buffers, returning the number of pixels that are
 # different and the maximum difference of any single color channel in
