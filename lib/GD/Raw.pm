@@ -136,13 +136,13 @@ sub fopen( Str $filename, Str $mode )
 sub fclose(OpaquePointer)
     is native(LIB) is export { ... }
 
-sub gdImageCreateFromJpeg(OpaquePointer $file) 
+sub gdImageCreateFromJpeg(OpaquePointer $file)
     returns gdImagePtr
-    is native(LIB) is export { ... } 
+    is native(LIB) is export { ... }
 
-sub gdImageCreateFromPng(OpaquePointer $file) 
+sub gdImageCreateFromPng(OpaquePointer $file)
     returns gdImagePtr
-    is native(LIB) is export { ... } 
+    is native(LIB) is export { ... }
 
 sub gdImageCreateFromGif(OpaquePointer $file)
     returns gdImagePtr
@@ -179,10 +179,10 @@ sub gdImageFilledEllipse (gdImagePtr $im, int32 $cx, int32 $cy, int32 $w, int32 
     # returns void
     is native(LIB) is export { * }
 
-sub gdImageCopyResized(gdImageStruct $dst, gdImageStruct $src, 
+sub gdImageCopyResized(gdImageStruct $dst, gdImageStruct $src,
         int32 $dstX, int32 $dstY,
-        int32 $srcX, int32 $srcY, 
-        int32 $dstW, int32 $dstH, int32 $srcW, int32 $srcH) 
+        int32 $srcX, int32 $srcY,
+        int32 $dstW, int32 $dstH, int32 $srcW, int32 $srcH)
     is native(LIB) is export { ... }
 
 sub gdImageCopyResampled(gdImageStruct $dst, gdImageStruct $src,
@@ -190,9 +190,9 @@ sub gdImageCopyResampled(gdImageStruct $dst, gdImageStruct $src,
     is native(LIB) is export { ... }
 
 
-sub gdImageSetThickness(gdImagePtr $im, int32 $thickness) 
+sub gdImageSetThickness(gdImagePtr $im, int32 $thickness)
     #returns void
-    is native(LIB) is export { * }  
+    is native(LIB) is export { * }
 
 sub gdImageDestroy(gdImageStruct)
     is native(LIB) is export { ... }
@@ -207,9 +207,9 @@ sub gdImageSetPixel(gdImagePtr $im, int32 $x, int32 $y, int32 $color)
 
 
 sub gdTrueColorAlpha($r, $g, $b, $a) is export {
-    ((($a) +< 24) + 
-	 (($r) +< 16) + 
-	 (($g) +< 8) + 
+    ((($a) +< 24) +
+	 (($r) +< 16) +
+	 (($g) +< 8) +
 	 ($b));
 }
 
@@ -232,7 +232,7 @@ class gdPoint is repr('CStruct') is export {
 
 class gdPointPtr is repr('CStruct') is gdPoint { }
 
-## Re-implement gdImagePolygon until NativeCall has a way 
+## Re-implement gdImagePolygon until NativeCall has a way
 ## to pass array of gdPointPtr
 sub gdImagePolygon(gdImagePtr $im, @p, int32 $n, int32 $c) is export
 {
@@ -303,18 +303,18 @@ GD::Raw - Low level language bindings to GD Graphics Library
 =head1 SYNOPSIS
 
     use GD::Raw;
-    
+
     my $fh = fopen("my-image.png", "rb");
     my $img = gdImageCreateFromPng($fh);
-    
+
     say "Image resolution is ", gdImageSX($img), "x", gdImageSX($img);
-    
+
     gdImageDestroy($img);
 
 =head1 DESCRIPTION
 
-C<GD::Raw> is a low level language bindings to LibGD. It does not attempt to 
-provide you with an perlish interface, but tries to stay as close to it's C 
+C<GD::Raw> is a low level language bindings to LibGD. It does not attempt to
+provide you with an perlish interface, but tries to stay as close to it's C
 origin as possible.
 
 LibGD is large and this module far from covers it all. Feel free to add anything

@@ -22,7 +22,7 @@ sub gdTestImageFromPng(Cool $filename)
 
 
 sub gdTestImageCompareToFile(Cool $file, Int $line,
-    Str $message, Str $expected_file, gdImagePtr $actual) 
+    Str $message, Str $expected_file, gdImagePtr $actual)
 {
     my $expected = gdTestImageFromPng($expected_file);
 
@@ -80,7 +80,7 @@ sub gdTestImageDiff(gdImagePtr $buf_a, gdImagePtr $buf_b,
 			$c1 = gdImageGetTrueColorPixel($buf_a, $x, $y);
 			$c2 = gdImageGetTrueColorPixel($buf_b, $x, $y);
 
-            # check if the pixels are the same 
+            # check if the pixels are the same
 			if ($c1 != $c2) {
 				my int ($r1,$b1,$g1,$a1,$r2,$b2,$g2,$a2);
 				my ($diff_a,$diff_r,$diff_g,$diff_b);
@@ -91,7 +91,7 @@ sub gdTestImageDiff(gdImagePtr $buf_a, gdImagePtr $buf_b,
 				$diff_a *= 4; # emphasize
 
 				if ($diff_a) {
-					$diff_a += 128; # make sure it's visible 
+					$diff_a += 128; # make sure it's visible
 				}
 
                 if ($diff_a > gdAlphaMax) {
@@ -103,7 +103,7 @@ sub gdTestImageDiff(gdImagePtr $buf_a, gdImagePtr $buf_b,
 				$diff_r = ($r1 - $r2).abs;
                 $diff_r *= 4; # TODO: This line commented out or not?
 				if ($diff_r) {
-					$diff_r += gdRedMax/2; # make sure it's visible 
+					$diff_r += gdRedMax/2; # make sure it's visible
 				}
 				if ($diff_r > 255) {
 					$diff_r = 255;
@@ -113,9 +113,9 @@ sub gdTestImageDiff(gdImagePtr $buf_a, gdImagePtr $buf_b,
 				$g2 = gdTrueColorGetGreen($c2);
 				$diff_g = ($g1 - $g2).abs;
 
-				$diff_g *= 4;  # emphasize 
+				$diff_g *= 4;  # emphasize
 				if ($diff_g) {
-					$diff_g += gdGreenMax/2; # make sure it's visible 
+					$diff_g += gdGreenMax/2; # make sure it's visible
 				}
 				if ($diff_g > 255) {
 					$diff_g = 255;
@@ -124,9 +124,9 @@ sub gdTestImageDiff(gdImagePtr $buf_a, gdImagePtr $buf_b,
 				$b1 = gdTrueColorGetBlue($c1);
 				$b2 = gdTrueColorGetBlue($c2);
 				$diff_b = ($b1 - $b2).abs;
-				$diff_b *= 4;  # emphasize 
+				$diff_b *= 4;  # emphasize
 				if ($diff_b) {
-					$diff_b += gdBlueMax/2; # make sure it's visible 
+					$diff_b += gdBlueMax/2; # make sure it's visible
 				}
 				if ($diff_b > 255) {
 					$diff_b = 255;
@@ -200,13 +200,13 @@ sub gdTestImageCompareToImage($file, $line, $message,
         gdImagePng($actual, $afh);
         gdImagePng($expected, $dfh);
 
-        LEAVE { 
-            fclose($afh) if $afh; 
-            fclose($dfh) if $dfh; 
+        LEAVE {
+            fclose($afh) if $afh;
+            fclose($dfh) if $dfh;
         }
 
         return 0;
-	} 
+	}
 
 	return 1;
 }
