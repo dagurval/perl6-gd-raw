@@ -121,6 +121,8 @@ has int32 ($.alpha0, $.alpha1, $.alpha2, $.alpha3, $.alpha4, $.alpha5, $.alpha6,
 }
 class gdImagePtr is repr('CStruct') is gdImageStruct { }
 
+constant gdAntiAliased is export = -7;
+
 sub gdImageSX($img) is export {
     return $img.sx;
 }
@@ -188,6 +190,11 @@ sub gdImageGif(gdImageStruct $im, OpaquePointer $f)
 sub gdImageBmp(gdImageStruct $im, OpaquePointer $f, int32)
     is native(LIB) is export { ... }
 
+sub gdImageArc (gdImagePtr $im, int32 $cx, int32 $cy, int32 $w, int32 $h,
+    int32 $s, int32 $e, int32 $color) is export
+    # returns void
+    is native(LIB) is export { * }
+
 sub gdImageFilledEllipse (gdImagePtr $im, int32 $cx, int32 $cy, int32 $w, int32 $h,
                                         int32 $color)
     # returns void
@@ -202,6 +209,10 @@ sub gdImageCopyResized(gdImageStruct $dst, gdImageStruct $src,
 sub gdImageCopyResampled(gdImageStruct $dst, gdImageStruct $src,
     Int $dstX, Int $dstY, Int $srcX, Int $srcY, Int $dstW, Int $dstH, Int $srcW, Int $srcH)
     is native(LIB) is export { ... }
+
+sub gdImageSetAntiAliased (gdImagePtr $im, int32 $c) is export
+    #returns void
+    is native(LIB) is export { * }
 
 enum gdPixelateMode (
 	GD_PIXELATE_UPPERLEFT => 0,
@@ -231,6 +242,10 @@ sub gdImageGetPixel(gdImagePtr $im, int32 $x, int32 $y)
     returns int32
     is native(LIB) is export { * }
 
+sub gdImageLine (gdImagePtr $im, int32 $x1, int32 $y1, int32 $x2, int32 $y2, int32 $color) is export
+    #returns void
+    is native(LIB) is export { * }
+
 
 sub gdTrueColorAlpha($r, $g, $b, $a) is export {
     ((($a) +< 24) +
@@ -244,10 +259,6 @@ sub gdImageColorAllocate(gdImagePtr $im, int32 $r, int32 $g, int32 $b)
     is native(LIB) is export { * }
 
 sub gdImageFilledRectangle(gdImagePtr $im, int32 $x1, int32 $y1, int32 $x2, int32 $y2, int $color)
-    #returns void
-    is native(LIB) is export { * }
-
-sub gdImageLine(gdImagePtr $im, int32 $x1, int32 $y1, int32 $x2, int32 $y2, int32 $color)
     #returns void
     is native(LIB) is export { * }
 
