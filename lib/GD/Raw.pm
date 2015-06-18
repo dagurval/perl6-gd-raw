@@ -203,6 +203,14 @@ sub gdImageCopyResampled(gdImageStruct $dst, gdImageStruct $src,
     Int $dstX, Int $dstY, Int $srcX, Int $srcY, Int $dstW, Int $dstH, Int $srcW, Int $srcH)
     is native(LIB) is export { ... }
 
+enum gdPixelateMode (
+	GD_PIXELATE_UPPERLEFT => 0,
+	GD_PIXELATE_AVERAGE => 1
+);
+
+sub gdImagePixelate(gdImagePtr $im, int32 $block_size, uint32 $mode)
+    returns int32
+    is native(LIB) is export { * }
 
 sub gdImageSetThickness(gdImagePtr $im, int32 $thickness)
     #returns void
@@ -275,6 +283,15 @@ sub gdImageOpenPolygon(gdImagePtr $im, @p, int32 $n, int32 $c) is export
 
 
 sub gdImageColorExactAlpha(gdImagePtr $im, int32 $r, int32 $g, int32 $b, int32 $a)
+    returns int32
+    is native(LIB) is export { * }
+
+sub gdImageColorResolve(gdImagePtr $im, int32 $r, int32 $g, int32 $b)
+    returns int32
+    is native(LIB) is export { * }
+
+# Based on gdImageColorExactAlpha and gdImageColorClosestAlpha
+sub gdImageColorResolveAlpha(gdImagePtr $im, int32 $r, int32 $g, int32 $b, int32 $a)
     returns int32
     is native(LIB) is export { * }
 
