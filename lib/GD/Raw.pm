@@ -1,6 +1,7 @@
 use NativeCall;
 
 sub LIB {
+    #return "/home/dagurval/libgd/src/.libs/libgd";
     given $*VM.name {
        when 'parrot' {
            given $*VM.config<load_ext> {
@@ -82,7 +83,7 @@ has int32 ($.blue0, $.blue1, $.blue2, $.blue3, $.blue4, $.blue5, $.blue6, $.blue
 
 has int32 ($.open0, $.open1, $.open2, $.open3, $.open4, $.open5, $.open6, $.open7, $.open8, $.open9, $.open10, $.open11, $.open12, $.open13, $.open14, $.open15, $.open16, $.open17, $.open18, $.open19, $.open20, $.open21, $.open22, $.open23, $.open24, $.open25, $.open26, $.open27, $.open28, $.open29, $.open30, $.open31, $.open32, $.open33, $.open34, $.open35, $.open36, $.open37, $.open38, $.open39, $.open40, $.open41, $.open42, $.open43, $.open44, $.open45, $.open46, $.open47, $.open48, $.open49, $.open50, $.open51, $.open52, $.open53, $.open54, $.open55, $.open56, $.open57, $.open58, $.open59, $.open60, $.open61, $.open62, $.open63, $.open64, $.open65, $.open66, $.open67, $.open68, $.open69, $.open70, $.open71, $.open72, $.open73, $.open74, $.open75, $.open76, $.open77, $.open78, $.open79, $.open80, $.open81, $.open82, $.open83, $.open84, $.open85, $.open86, $.open87, $.open88, $.open89, $.open90, $.open91, $.open92, $.open93, $.open94, $.open95, $.open96, $.open97, $.open98, $.open99, $.open100, $.open101, $.open102, $.open103, $.open104, $.open105, $.open106, $.open107, $.open108, $.open109, $.open110, $.open111, $.open112, $.open113, $.open114, $.open115, $.open116, $.open117, $.open118, $.open119, $.open120, $.open121, $.open122, $.open123, $.open124, $.open125, $.open126, $.open127, $.open128, $.open129, $.open130, $.open131, $.open132, $.open133, $.open134, $.open135, $.open136, $.open137, $.open138, $.open139, $.open140, $.open141, $.open142, $.open143, $.open144, $.open145, $.open146, $.open147, $.open148, $.open149, $.open150, $.open151, $.open152, $.open153, $.open154, $.open155, $.open156, $.open157, $.open158, $.open159, $.open160, $.open161, $.open162, $.open163, $.open164, $.open165, $.open166, $.open167, $.open168, $.open169, $.open170, $.open171, $.open172, $.open173, $.open174, $.open175, $.open176, $.open177, $.open178, $.open179, $.open180, $.open181, $.open182, $.open183, $.open184, $.open185, $.open186, $.open187, $.open188, $.open189, $.open190, $.open191, $.open192, $.open193, $.open194, $.open195, $.open196, $.open197, $.open198, $.open199, $.open200, $.open201, $.open202, $.open203, $.open204, $.open205, $.open206, $.open207, $.open208, $.open209, $.open210, $.open211, $.open212, $.open213, $.open214, $.open215, $.open216, $.open217, $.open218, $.open219, $.open220, $.open221, $.open222, $.open223, $.open224, $.open225, $.open226, $.open227, $.open228, $.open229, $.open230, $.open231, $.open232, $.open233, $.open234, $.open235, $.open236, $.open237, $.open238, $.open239, $.open240, $.open241, $.open242, $.open243, $.open244, $.open245, $.open246, $.open247, $.open248, $.open249, $.open250, $.open251, $.open252, $.open253, $.open254, $.open255, );
 
-has int32 $.transparent;
+    has int32 $.transparent;
 	has OpaquePointer $.polyInts;
 	has int32 $.polyAllocated;
 	has gdImageStruct $.brush;
@@ -177,6 +178,10 @@ sub gdImageCreate(int32, int32)
     is native(LIB) is export { ... }
 
 sub gdImageCreatePalette($x, $y) is export { gdImageCreate($x, $y) }
+
+sub gdFree(OpaquePointer $m)
+    # returns void
+    is native(LIB) is export { * }
 
 sub gdImageJpeg(gdImageStruct $image, OpaquePointer $file, Int $quality where { $_ <= 95 })
     is native(LIB) is export { ... }
@@ -290,6 +295,135 @@ sub gdImageOpenPolygon(gdImagePtr $im, @p, int32 $n, int32 $c) is export
         gdImageLine($im, $lx, $ly, $x, $y, $c);
         ($lx, $ly) = ($x, $y);
     }
+}
+
+## Re-implementation - until there is a way to properly pass gdPointPtr array with NativeCall.
+##
+## This re-implementation has some hacks. Some sanity checks are removed. It does
+## not allocate and modify im.polyInts as it does in the original implementation.
+##
+## It does however pass the unittests from libgd, so I guess it's OK-ish
+sub gdImageFilledPolygon($im is rw, @p, int32 $n, int32 $c) is export {
+
+    return if $n <= 0;
+
+    my $fill_color = $c == gdAntiAliased ?? $im.AA_color !! $c;
+
+    sub gdMalloc($size) {
+        sub malloc(uint32) returns OpaquePointer is native(LIB) { * }
+        return malloc($size);
+    }
+
+    sub gdRealloc($ptr, uint32 $size)
+    {
+        sub realloc(OpaquePointer $ptr, uint32 $size)
+            returns OpaquePointer is native(LIB) { * }
+
+        return realloc($ptr, $size);
+    }
+
+    sub gdReallocEx ($ptr, $size)
+    {
+        my $newPtr = gdRealloc($ptr, $size);
+        gdFree $ptr if (!$newPtr && $ptr);
+        return $newPtr;
+    }
+
+    my $sizeofint = 32;
+
+	if (!$im.polyAllocated) {
+        #$im.polyInts = gdMalloc($sizeofint * $n);
+        #if (!$im.polyInts) {
+		#	return;
+		#}
+        #$im.polyAllocated = $n;
+	}
+	if ($im.polyAllocated < $n) {
+        #while ($im.polyAllocated < $n) {
+		#	$im.polyAllocated *= 2;
+		#}
+		#$im.polyInts = gdReallocEx($im.polyInts, $sizeofint * $im.polyAllocated);
+		#return unless $im.polyInts;
+	}
+	my $miny = @p[0].y;
+	my $maxy = @p[0].y;
+	loop (my $i = 1; ($i < $n); $i++) {
+		if (@p[$i].y < $miny) {
+			$miny = @p[$i].y;
+		}
+		if (@p[$i].y > $maxy) {
+			$maxy = @p[$i].y;
+		}
+	}
+	my $pmaxy = $maxy;
+    # 2.0.16: Optimization by Ilia Chipitsine -- don't waste time offscreen */
+    # 2.0.26: clipping rectangle is even better
+	if ($miny < $im.cy1) {
+		$miny = $im.cy1;
+	}
+	if ($maxy > $im.cy2) {
+		$maxy = $im.cy2;
+	}
+    # Fix in 1.3: count a vertex only once
+	loop (my $y = $miny; ($y <= $maxy); $y++) {
+		my $ints = 0;
+        my @polyInts; # HACK
+		loop (my $i = 0; ($i < $n); $i++) {
+            my ($x1, $x2);
+            my $ind1 = $i ?? $i - 1 !! $n - 1;
+            my $ind2 = $i ?? $i !! 0;
+			my $y1 = @p[$ind1].y;
+			my $y2 = @p[$ind2].y;
+			if ($y1 < $y2) {
+				$x1 = @p[$ind1].x;
+				$x2 = @p[$ind2].x;
+			}
+            elsif ($y1 > $y2) {
+				$y2 = @p[$ind1].y;
+				$y1 = @p[$ind2].y;
+				$x2 = @p[$ind1].x;
+				$x1 = @p[$ind2].x;
+			} else {
+				next;
+			}
+
+            # Do the following math as float intermediately, and round to ensure
+            # that Polygon and FilledPolygon for the same set of points have the
+            # same footprint.
+
+			if (($y >= $y1) && ($y < $y2)) {
+				@polyInts[$ints++] = floor ( (($y - $y1) * ($x2 - $x1)) /
+				                               ($y2 - $y1) + 0.5 + $x1);
+			} elsif (($y == $pmaxy) && ($y == $y2)) {
+				@polyInts[$ints++] = $x2;
+			}
+		}
+
+        #  2.0.26: polygons pretty much always have less than 100 points,
+		#  and most of the time they have considerably less. For such trivial
+		#  cases, insertion sort is a good choice. Also a good choice for
+		#  future implementations that may wish to indirect through a table.
+		loop ($i = 1; ($i < $ints); $i++) {
+			my $index = @polyInts[$i];
+			my $j = $i;
+			while (($j > 0) && (@polyInts[$j - 1] > $index)) {
+				@polyInts[$j] = @polyInts[$j - 1];
+				$j--;
+			}
+			@polyInts[$j] = $index;
+		}
+		loop ($i = 0; ($i < ($ints - 1)); $i += 2) {
+            # 2.0.29: back to gdImageLine to prevent segfaults when
+            #performing a pattern fill
+            gdImageLine($im, @polyInts[$i], $y, @polyInts[$i + 1], $y,
+            $fill_color);
+		}
+	}
+    # If we are drawing this AA, then redraw the border with AA lines.
+    # This doesn't work as well as I'd like, but it doesn't clash either.
+	if ($c == gdAntiAliased) {
+		gdImagePolygon($im, @p, $n, $c);
+	}
 }
 
 
