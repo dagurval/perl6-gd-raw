@@ -1,20 +1,6 @@
 use NativeCall;
 
-sub LIB {
-    #return "/home/dagurval/libgd/src/.libs/libgd";
-    given $*VM.name {
-       when 'parrot' {
-           given $*VM.config<load_ext> {
-               when '.so' { return 'libgd.so' }	# Linux
-	            when '.bundle' { return 'libgd.dylib' }	# Mac OS
-	            default { return 'libgd' }
-           }
-       }
-       default {
-          return 'libgd';
-       }
-    }
-}
+constant LIB = [ 'gd', v3 ];
 
 constant gdAlphaMax is export = 127;
 constant gdAlphaOpaque is export = 0;
