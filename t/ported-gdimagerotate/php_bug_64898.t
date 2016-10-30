@@ -1,6 +1,6 @@
-BEGIN { @*INC.unshift('t') }
 use v6;
 use GD::Raw;
+use lib <t>;
 use gdtest;
 use Test;
 
