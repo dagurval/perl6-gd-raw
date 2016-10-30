@@ -25,4 +25,4 @@ my $r = gdAssertImageEqualsToFile("t/ported-gdimagepolygon/gdimagepolygon2.png",
 gdImageDestroy($im);
 ok $r, "gdAssertImageEqualsToFile";
 
-done;
+done-testing;

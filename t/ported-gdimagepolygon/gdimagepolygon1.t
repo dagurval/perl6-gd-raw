@@ -20,4 +20,4 @@ my @points;
 gdImagePolygon($im, @points, 1, $black);
 ok gdAssertImageEqualsToFile("t/ported-gdimagepolygon/gdimagepolygon1.png", $im);
 
-done;
+done-testing;

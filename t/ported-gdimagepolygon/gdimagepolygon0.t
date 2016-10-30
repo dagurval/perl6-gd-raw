@@ -15,4 +15,4 @@ gdImagePolygon($im, (), 0, $black); # no effect
 gdImagePolygon($im, (), -1, $black); # no effect
 ok gdAssertImageEqualsToFile("t/ported-gdimagepolygon/gdimagepolygon0.png", $im);
 
-done;
+done-testing;
