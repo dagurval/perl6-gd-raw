@@ -1,6 +1,6 @@
 use NativeCall;
 
-constant LIB = [ 'gd', v3 ];
+constant LIB = [ 'gd', Version ];
 
 constant gdAlphaMax is export = 127;
 constant gdAlphaOpaque is export = 0;
