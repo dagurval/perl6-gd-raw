@@ -134,15 +134,19 @@ sub gdImageSY($img) is export {
 
 sub gdImageColorsTotal($im) { $im.colorsTotal }
 sub gdImageRed($im, Int $c) is export {
+    use MONKEY-SEE-NO-EVAL;
     $im.trueColor ?? gdTrueColorGetRed($c) !! EVAL "\$im.red$c"
 }
 sub gdImageGreen($im, Int $c) is export {
+    use MONKEY-SEE-NO-EVAL;
     $im.trueColor ?? gdTrueColorGetGreen($c) !! EVAL "\$im.green$c"
 }
 sub gdImageBlue($im, Int $c) is export {
+    use MONKEY-SEE-NO-EVAL;
     $im.trueColor ?? gdTrueColorGetBlue($c) !! EVAL "\$im.blue$c"
 }
 sub gdImageAlpha($im, Int $c) is export {
+    use MONKEY-SEE-NO-EVAL;
     $im.trueColor ?? gdTrueColorGetAlpha($c) !! EVAL "\$im.alpha$c"
 }
 
