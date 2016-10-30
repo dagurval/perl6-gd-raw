@@ -1,16 +1,6 @@
 use NativeCall;
 
-sub LIB() {  
-    my $v = do given $*DISTRO.name {
-        when 'fedora' {
-            v3;
-        }
-        default {
-            v2;
-        }
-    }
-    ['gd', $v ] 
-};
+constant LIB = [ 'gd', v3 ];
 
 constant gdAlphaMax is export = 127;
 constant gdAlphaOpaque is export = 0;
