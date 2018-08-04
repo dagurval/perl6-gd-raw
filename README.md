@@ -21,3 +21,10 @@ DESCRIPTION
 `GD::Raw` is a low level language bindings to LibGD. It does not attempt to  provide you with an perlish interface, but tries to stay as close to it's C  origin as possible.
 
 LibGD is large and this module far from covers it all. Feel free to add anything your missing and submit a pull request!
+
+
+## Installation
+
+You need to install first libgdraw4 (in Ubuntu) or equivalent.
+
+    sudo apt install libgdraw4
